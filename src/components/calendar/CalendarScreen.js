@@ -10,44 +10,42 @@ import { CalendarModal } from './CalendarModal';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'moment/locale/es';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { uiOpenModal } from '../../actions/ui';
+
+import { eventClearActiveEvent, eventSetActive } from '../../actions/events';
+import { AddNewFab } from '../ui/AddNewFab';
+import { DeleteEventFab } from '../ui/DeleteEventFab';
 
 moment.locale('es');
 
 const localizer = momentLocalizer(moment);
 
-const events =[{
-    title: 'Calendario',
-    start: moment().toDate(),
-    end: moment().add(2, 'hours').toDate(),
-    bgcolor: '#fafafa',
-    notes: 'Comprar el Pastel',
-    user:{
-      _id: '123',
-      name: 'Rogelio'
-    }
-}]
-
 export const CalendarScreen = () => {
 
   const dispatch = useDispatch();
+  const { events, activeEvent } = useSelector(state => state.calendar);
+
+  
 
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'moth' );
 
 
   const onDoubleClick = (e) =>{
     dispatch( uiOpenModal() );
-    console.log(e);
   }
 
   const onSelectEvent = (e) =>{
-    console.log(e);
+    dispatch ( eventSetActive(e) )
   }
 
   const onViewChange = (e) =>{
     setLastView(e);
     localStorage.setItem('lastView', e)
+  }
+
+  const onSelectSlot = () => {
+    dispatch(eventClearActiveEvent());
   }
 
   const eventStyleGetter = (event, start, end, isSelected) =>{
@@ -63,7 +61,6 @@ export const CalendarScreen = () => {
        style
      }
   }
-  console.log(lastView);
 
     return (
         <div className='calendar-screen'>
@@ -79,6 +76,8 @@ export const CalendarScreen = () => {
             onDoubleClickEvent={onDoubleClick}
             onSelectEvent={onSelectEvent}
             onView={onViewChange}
+            onSelectSlot={onSelectSlot}
+            selectable={true}
             defaultView={'month'}
             view={ lastView }
             components={{
@@ -86,11 +85,12 @@ export const CalendarScreen = () => {
             }}
           />
           
+          <AddNewFab />
+          {
+            (activeEvent) && <DeleteEventFab/>
+          }
+          
           <CalendarModal/>
-          <p>{
-                console.log(lastView)
-              }</p>
-
         </div>
     )
     
