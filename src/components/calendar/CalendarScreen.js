@@ -28,7 +28,7 @@ export const CalendarScreen = () => {
 
   
 
-  const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'moth' );
+  const [lastView, setLastView] = useState( localStorage.getItem('lastView') || 'month' );
 
 
   const onDoubleClick = (e) =>{
@@ -67,23 +67,22 @@ export const CalendarScreen = () => {
           <Navbar/>
             
           <Calendar
-            localizer={localizer}
-            events = {events}
+            localizer={ localizer }
+            events={ events }
             startAccessor="start"
             endAccessor="end"
-            messages={messages}
+            messages={ messages }
             eventPropGetter={ eventStyleGetter }
-            onDoubleClickEvent={onDoubleClick}
-            onSelectEvent={onSelectEvent}
-            onView={onViewChange}
-            onSelectSlot={onSelectSlot}
-            selectable={true}
-            defaultView={'month'}
+            onDoubleClickEvent={ onDoubleClick }
+            onSelectEvent={ onSelectEvent }
+            onView={ onViewChange }
+            onSelectSlot={ onSelectSlot }
+            selectable={ true }
             view={ lastView }
             components={{
-              event: CalendarEvent
+                event: CalendarEvent
             }}
-          />
+            />
           
           <AddNewFab />
           {
