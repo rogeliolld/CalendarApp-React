@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import DateTimePicker from 'react-datetime-picker';
 import Swal from 'sweetalert2'
 import { uiCloseModal } from "../../actions/ui";
-import { eventAddNew, eventClearActiveEvent, eventUpdated } from "../../actions/events";
+import { eventClearActiveEvent, eventStartAddNew, eventStartUpdate } from "../../actions/events";
 
 const customStyles = {
   content: {
@@ -104,18 +104,11 @@ export const CalendarModal = () => {
 
     if (activeEvent){
       
-      dispatch (eventUpdated(formValues));
+      dispatch (eventStartUpdate(formValues));
 
     }else{
 
-      dispatch( eventAddNew({
-        ...formValues,
-        id: new Date().getTime(),
-        user:{
-          _id: '123',
-          name: 'Rogelio'
-        }
-      }) );
+      dispatch( eventStartAddNew( formValues ) );
 
     };
 
@@ -145,7 +138,7 @@ export const CalendarModal = () => {
             <label>Fecha y hora inicio</label>
             <DateTimePicker
                 onChange={handleStartDateChange}
-                value={dateStart}
+                value={ (activeEvent) ? activeEvent.start : dateStart }
                 className="form-control"
             />
           </div>
@@ -155,7 +148,7 @@ export const CalendarModal = () => {
             <DateTimePicker
                 onChange={handleEndDateChange}
                 value={dateEnd}
-                minDate= { dateStart }
+                minDate= { (activeEvent) ? activeEvent.end : dateEnd }
                 className="form-control"
             />
           </div>
